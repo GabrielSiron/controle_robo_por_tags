@@ -3,6 +3,8 @@ import numpy as np
 import math
 from pyfirmata import Arduino
 
+#demo: https://drive.google.com/open?id=1o5wWD6clXiKC6qeON1uYP24FKBFMXq9i
+
 class motor:
     
     def __init__(self):
