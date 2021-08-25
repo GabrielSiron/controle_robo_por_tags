@@ -11,3 +11,19 @@ da movimentação do robô (sendo ângulo para direcional e tamanho para velocid
 
 Projeto não finalizado.
 
+## Como Rodar o Projeto
+
+ - Primeiro, instale as libs `cv2` e `numpy`
+ 
+```
+~$ pip3 install opencv-python
+
+...
+
+~$ pip3 instal numpy
+```
+
+- Segundo, rode o programa `trackbar.py`. Nele, você vai filtrar as cores que quer que seu programa reconheça. Ainda está manual, então anote os valores que
+aparecerem na tela, tanto para o primeiro quanto para o segundo marcador.
+
+- Terceiro, rode o programa `main.py`
