@@ -1,22 +1,22 @@
 import cv2
 import numpy as np
 import math
-from pyfirmata import Arduino
+# from pyfirmata import Arduino
 
-#demo: https://drive.google.com/open?id=1o5wWD6clXiKC6qeON1uYP24FKBFMXq9i
+# #demo: https://drive.google.com/open?id=1o5wWD6clXiKC6qeON1uYP24FKBFMXq9i
 
-class motor:
+# class motor:
     
-    def __init__(self):
-        board = Arduino('COM8')
-        vel   = board.get_pin('d:6:p')
-        pin1  = board.get_pin('d:7:o')
-        pin2  = board.get_pin('d:8:o')
+#     def __init__(self):
+#         board = Arduino('COM8')
+#         vel   = board.get_pin('d:6:p')
+#         pin1  = board.get_pin('d:7:o')
+#         pin2  = board.get_pin('d:8:o')
     
-    def sendToArduino(self, velocity):
-        self.vel(velocity)
-        self.pin1.write(1)
-        self.pin2.write(0)
+#     def sendToArduino(self, velocity):
+#         self.vel(velocity)
+#         self.pin1.write(1)
+#         self.pin2.write(0)
             
 def processImage(camera, interval):
     
@@ -29,7 +29,7 @@ def processImage(camera, interval):
         mask   = []
         dilate = []
         c      = [[], []]
-        
+        cv2.imshow('frame normal', frame)
         for i in range(len(interval)):
             
             mask.append(cv2.inRange(frameHsv, interval[i][0], interval[i][1]))
@@ -53,7 +53,6 @@ def processImage(camera, interval):
                     if qtd == 2:  
                         cv2.line(frame, (c[0][0], c[0][1]), (c[1][0], c[1][1]), (0, 0, 255), 2)
                         cv2.imshow('frame', frame)
-                        out.write(frame)
                         return c 
     
     return 0
@@ -106,19 +105,19 @@ def biggerCont(contorns):
 
     return contorn
 
-camera = cv2.VideoCapture('output.avi')
-fourcc = cv2.VideoWriter_fourcc(*'DIVX')
-out = cv2.VideoWriter('output2.avi',fourcc, 20.0, (640,480))
+camera = cv2.VideoCapture(0)
+#fourcc = cv2.VideoWriter_fourcc(*'DIVX')
+#out = cv2.VideoWriter('output2.avi',fourcc, 20.0, (640,480))
 
 #rightMotor = motor()
 #leftMotor  = motor()
 
 while True:
     
-    interval = [[np.array([135, 0, 225]), 
-                 np.array([180, 41, 255])],
-                [np.array([93, 54, 202]), 
-                 np.array([118, 189, 255])]]
+    interval = [[np.array([94, 128, 140]), 
+                 np.array([204, 255, 255])],
+                [np.array([0, 77, 217]), 
+                 np.array([24, 255, 255])]]
     
     points = processImage(camera, interval)
     
@@ -146,5 +145,4 @@ while True:
             print('{:.2f} e {:.2f}'.format(2*(distance/1.5 - velocity)/267, 2*velocity/267))
             
     if cv2.waitKey(1) & 0xFF == 27:
-        out.release()
         break
