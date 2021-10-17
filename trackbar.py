@@ -18,7 +18,7 @@ cv2.createTrackbar('B-h','image',0,255,nothing)
 camera = cv2.VideoCapture(0)
 
 while True:
-    conf, frame = camera.read()
+    _, frame = camera.read()
     frameHsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     
     k = cv2.waitKey(1) & 0xFF
