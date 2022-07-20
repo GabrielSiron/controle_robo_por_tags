@@ -1,22 +1,21 @@
 import cv2
 import numpy as np
 import math
-# from pyfirmata import Arduino
+from pyfirmata import Arduino
 
-# #demo: https://drive.google.com/open?id=1o5wWD6clXiKC6qeON1uYP24FKBFMXq9i
+#demo: https://drive.google.com/open?id=1o5wWD6clXiKC6qeON1uYP24FKBFMXq9i
 
-# class motor:
+board = Arduino('COM4')
+
+class motor:
     
-#     def __init__(self):
-#         board = Arduino('COM8')
-#         vel   = board.get_pin('d:6:p')
-#         pin1  = board.get_pin('d:7:o')
-#         pin2  = board.get_pin('d:8:o')
+    def __init__(self, pin1, pin2):
+        self.vel   = board.get_pin('d:' + str(pin1) + ':p')
+        self.pin1  = board.get_pin('d:' + str(pin2) + ':o')
     
-#     def sendToArduino(self, velocity):
-#         self.vel(velocity)
-#         self.pin1.write(1)
-#         self.pin2.write(0)
+    def sendToArduino(self, velocity):
+        self.vel.write(velocity)
+        self.pin1.write(0)
             
 def processImage(camera, interval):
     
@@ -109,15 +108,15 @@ camera = cv2.VideoCapture(0)
 #fourcc = cv2.VideoWriter_fourcc(*'DIVX')
 #out = cv2.VideoWriter('output2.avi',fourcc, 20.0, (640,480))
 
-#rightMotor = motor()
-#leftMotor  = motor()
+rightMotor = motor(3, 2)
+leftMotor  = motor(5, 4)
 
 while True:
     
-    interval = [[np.array([94, 128, 140]), 
-                 np.array([204, 255, 255])],
-                [np.array([0, 77, 217]), 
-                 np.array([24, 255, 255])]]
+    interval = [[np.array([90, 151, 0]), 
+                 np.array([109, 255, 151])],
+                [np.array([0, 149, 111]), 
+                 np.array([26, 224, 154])]]
     
     points = processImage(camera, interval)
     
@@ -136,13 +135,13 @@ while True:
         velocity = (angle*0.5*int(distance/1.5))/90 + 0.5*int(distance/1.5)
         
         if points[0][0] < points[1][0]:
-            #rightMotor.sendToArduino(velocity/267)
-            #leftMotor.sendToArduino((distance/1.5 - velocity)/267)
-            print('{:.2f} e {:.2f}'.format(2*velocity/267, 2*(distance/1.5 - velocity)/267))       
+            rightMotor.sendToArduino(velocity/267)
+            leftMotor.sendToArduino((distance/1.5 - velocity)/267)
+            print('{:.2f}'.format(velocity))       
         else:
-            #rightMotor.sendToArduino((distance/1.5 - velocity)/267)
-            #leftMotor.sendToArduino(velocity/267)
-            print('{:.2f} e {:.2f}'.format(2*(distance/1.5 - velocity)/267, 2*velocity/267))
+            rightMotor.sendToArduino((distance/1.5 - velocity)/267)
+            leftMotor.sendToArduino(velocity/267)
+            print('{:.2f}'.format(velocity))
             
     if cv2.waitKey(1) & 0xFF == 27:
         break
